@@ -12,7 +12,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Setup halaman
 st.set_page_config(page_title="Distribusi & Analisis Kinerja", layout="wide")
-st.title("📊 Distribusi Skor Penilaian & Analisis GPT-4o")
+st.title("📊 Distribusi Skor Penilaian & Analisis AI")
 
 # Upload data
 uploaded_file = st.file_uploader("Unggah file CSV Penilaian Kinerja", type="csv")
@@ -36,7 +36,7 @@ if uploaded_file:
     with col2:
         fig, ax = plt.subplots()
         sns.histplot(df["Skor_Assessment"].dropna(), kde=True, ax=ax, color="orange")
-        ax.set_title("Distribusi Skor Assessment AKHLAK")
+        ax.set_title("Distribusi Skor Assessment")
         st.pyplot(fig)
 
     with col3:
