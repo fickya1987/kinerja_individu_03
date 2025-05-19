@@ -12,7 +12,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Setup halaman
 st.set_page_config(page_title="Distribusi & Analisis Kinerja", layout="wide")
-st.title("📊 Distribusi Skor Penilaian & Analisis GPT-4o")
+st.title("📊 Distribusi Skor Penilaian & Analisis Pelindo AI")
 
 # Upload data
 uploaded_file = st.file_uploader("Unggah file CSV Penilaian Kinerja", type="csv")
@@ -36,7 +36,7 @@ if uploaded_file:
     with col2:
         fig, ax = plt.subplots()
         sns.histplot(df["Skor_Assessment"].dropna(), kde=True, ax=ax, color="orange")
-        ax.set_title("Distribusi Skor Assessment AKHLAK")
+        ax.set_title("Distribusi Skor Assessment")
         st.pyplot(fig)
 
     with col3:
@@ -47,7 +47,7 @@ if uploaded_file:
 
     # Narasi otomatis dengan GPT-4o
     if openai.api_key:
-        with st.expander("🧠 Narasi Analisis dari GPT-4o"):
+        with st.expander("🧠 Narasi Analisis dari Pelindo AI"):
             prompt = f"""
             Anda adalah Analis Senior SDM PT Pelabuhan Indonesia (Persero) yang memahami kebijakan pengelolaan kinerja individu sesuai Peraturan Direksi terbaru.
 
@@ -67,6 +67,7 @@ if uploaded_file:
             1. Deskripsikan pola persebaran skor dan kecenderungan kategori penilaian.
             2. Soroti tren umum antara KPI dan Perilaku.
             3. Berikan insight evaluasi terhadap efektivitas sistem kinerja dan potensi intervensi organisasi.
+            4. Jelaskan analisa tiap grafik distirbusi normal, terutama terkait cenderung ke kiri, tengah atau kanan (skewness).
             """
             response = openai.ChatCompletion.create(
                 model="gpt-4o",
@@ -84,12 +85,12 @@ if uploaded_file:
     st.markdown(
         f"**Nama Posisi**: {selected_row['Nama_Posisi']}  \n"
         f"**Skor KPI Final**: {selected_row['Skor_KPI_Final']}  \n"
-        f"**Skor Assessment AKHLAK**: {selected_row['Skor_Assessment']}  \n"
+        f"**Skor Assessment**: {selected_row['Skor_Assessment']}  \n"
         f"**Skor Kinerja Individu**: {selected_row['Skor_Kinerja_Individu']}  \n"
     )
 
     if openai.api_key:
-        with st.expander("🔍 Narasi GPT-4o untuk Pekerja Ini"):
+        with st.expander("🔍 Narasi Pelindo AI untuk Pekerja Ini"):
             prompt = f"""
             Anda adalah analis SDM PT Pelabuhan Indonesia (Persero) yang melakukan evaluasi performa tahunan berbasis standar resmi perusahaan.
 
@@ -100,12 +101,13 @@ if uploaded_file:
             Evaluasilah pekerja ini:
             - Posisi: {selected_row['Nama_Posisi']}
             - Skor KPI: {selected_row['Skor_KPI_Final']}
-            - Skor Assessment (AKHLAK): {selected_row['Skor_Assessment']}
+            - Skor Assessment: {selected_row['Skor_Assessment']}
             - Skor Kinerja Individu: {selected_row['Skor_Kinerja_Individu']}
 
             1. Simpulkan pencapaian utama dan kekuatannya.
             2. Sebutkan area yang bisa dikembangkan (jika ada).
             3. Berikan rekomendasi yang sesuai dengan pendekatan Pelindo: apakah perlu coaching, CMC, atau hanya monitoring rutin.
+            4. Jelaskan bahwa pekerja ini dalam analisa grafik distirbusi normal, masuk ke kiri, tengah atau kanan (skewness).
             """
             response = openai.ChatCompletion.create(
                 model="gpt-4o",
