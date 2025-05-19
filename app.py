@@ -68,6 +68,7 @@ if uploaded_file:
             2. Soroti tren umum antara KPI dan Perilaku.
             3. Berikan insight evaluasi terhadap efektivitas sistem kinerja dan potensi intervensi organisasi.
             4. Jelaskan analisa tiap grafik distirbusi normal, terutama terkait cenderung ke kiri, tengah atau kanan (skewness).
+            5. Analisa juga jumlah sebaran distribusi pekerja sesuai hasil distribusi normal, seperti jumlah yang ke sebaran kiri, tengah, atau kanan.
             """
             response = openai.ChatCompletion.create(
                 model="gpt-4o",
