@@ -12,7 +12,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Setup halaman
 st.set_page_config(page_title="Distribusi & Analisis Kinerja", layout="wide")
-st.title("📊 Distribusi Skor Penilaian & Analisis AI")
+st.title("📊 Distribusi Skor Penilaian & Analisis GPT-4o")
 
 # Upload data
 uploaded_file = st.file_uploader("Unggah file CSV Penilaian Kinerja", type="csv")
@@ -36,7 +36,7 @@ if uploaded_file:
     with col2:
         fig, ax = plt.subplots()
         sns.histplot(df["Skor_Assessment"].dropna(), kde=True, ax=ax, color="orange")
-        ax.set_title("Distribusi Skor Assessment")
+        ax.set_title("Distribusi Skor Assessment AKHLAK")
         st.pyplot(fig)
 
     with col3:
@@ -49,13 +49,24 @@ if uploaded_file:
     if openai.api_key:
         with st.expander("🧠 Narasi Analisis dari GPT-4o"):
             prompt = f"""
-            Anda adalah analis SDM. Berdasarkan distribusi berikut:
+            Anda adalah Analis Senior SDM PT Pelabuhan Indonesia (Persero) yang memahami kebijakan pengelolaan kinerja individu sesuai Peraturan Direksi terbaru.
 
-            - Skor KPI Final memiliki distribusi: min {df['Skor_KPI_Final'].min():.2f}, max {df['Skor_KPI_Final'].max():.2f}, mean {df['Skor_KPI_Final'].mean():.2f}
+            Gunakan prinsip penilaian kinerja berdasarkan KPI (80%) dan perilaku AKHLAK (20%) serta kategori evaluasi:
+            - ISTIMEWA (>110)
+            - SANGAT BAIK (>105 - 110)
+            - BAIK (90 - 105)
+            - CUKUP (80 - <90)
+            - KURANG (<80)
+
+            Berdasarkan data distribusi berikut:
+            - Skor KPI Final: min {df['Skor_KPI_Final'].min():.2f}, max {df['Skor_KPI_Final'].max():.2f}, mean {df['Skor_KPI_Final'].mean():.2f}
             - Skor Assessment: min {df['Skor_Assessment'].min():.2f}, max {df['Skor_Assessment'].max():.2f}, mean {df['Skor_Assessment'].mean():.2f}
             - Skor Kinerja Individu: min {df['Skor_Kinerja_Individu'].min():.2f}, max {df['Skor_Kinerja_Individu'].max():.2f}, mean {df['Skor_Kinerja_Individu'].mean():.2f}
 
-            Buatkan analisis naratif singkat (3 paragraf) mengenai pola persebaran kinerja, tren skor, serta insight terhadap evaluasi sistem penilaian.
+            Tulis narasi analisis berdasar regulasi dan best practice Pelindo:
+            1. Deskripsikan pola persebaran skor dan kecenderungan kategori penilaian.
+            2. Soroti tren umum antara KPI dan Perilaku.
+            3. Berikan insight evaluasi terhadap efektivitas sistem kinerja dan potensi intervensi organisasi.
             """
             response = openai.ChatCompletion.create(
                 model="gpt-4o",
@@ -80,13 +91,21 @@ if uploaded_file:
     if openai.api_key:
         with st.expander("🔍 Narasi GPT-4o untuk Pekerja Ini"):
             prompt = f"""
-            Analisis performa individu berdasarkan data berikut:
+            Anda adalah analis SDM PT Pelabuhan Indonesia (Persero) yang melakukan evaluasi performa tahunan berbasis standar resmi perusahaan.
+
+            Gunakan referensi berikut:
+            - Komposisi penilaian: 80% KPI + 20% Perilaku (AKHLAK)
+            - Kategori: ISTIMEWA (>110), SANGAT BAIK (>105–110), BAIK (90–105), CUKUP (80–<90), KURANG (<80)
+
+            Evaluasilah pekerja ini:
             - Posisi: {selected_row['Nama_Posisi']}
             - Skor KPI: {selected_row['Skor_KPI_Final']}
-            - Skor Assessment: {selected_row['Skor_Assessment']}
+            - Skor Assessment (AKHLAK): {selected_row['Skor_Assessment']}
             - Skor Kinerja Individu: {selected_row['Skor_Kinerja_Individu']}
 
-            Berikan interpretasi ringkas tentang kekuatan dan area pengembangan yang mungkin perlu diperhatikan.
+            1. Simpulkan pencapaian utama dan kekuatannya.
+            2. Sebutkan area yang bisa dikembangkan (jika ada).
+            3. Berikan rekomendasi yang sesuai dengan pendekatan Pelindo: apakah perlu coaching, CMC, atau hanya monitoring rutin.
             """
             response = openai.ChatCompletion.create(
                 model="gpt-4o",
