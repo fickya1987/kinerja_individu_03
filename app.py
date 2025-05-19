@@ -70,12 +70,12 @@ if uploaded_file:
     selected_nipp = st.selectbox("Pilih NIPP", df["NIPP_Pekerja"].unique())
     selected_row = df[df["NIPP_Pekerja"] == selected_nipp].iloc[0]
 
-    st.markdown(f"""
-    **Nama Posisi**: {selected_row['Nama_Posisi']}  
-    **Skor KPI Final**: {selected_row['Skor_KPI_Final']}  
-    **Skor Assessment AKHLAK**: {selected_row['Skor_Assessment']}  
-    **Skor Kinerja Individu**: {selected_row['Skor_Kinerja_Individu']}  
-    """)
+    st.markdown(
+        f"**Nama Posisi**: {selected_row['Nama_Posisi']}  \n"
+        f"**Skor KPI Final**: {selected_row['Skor_KPI_Final']}  \n"
+        f"**Skor Assessment AKHLAK**: {selected_row['Skor_Assessment']}  \n"
+        f"**Skor Kinerja Individu**: {selected_row['Skor_Kinerja_Individu']}  \n"
+    )
 
     if openai.api_key:
         with st.expander("🔍 Narasi GPT-4o untuk Pekerja Ini"):
@@ -93,4 +93,3 @@ if uploaded_file:
                 messages=[{"role": "user", "content": prompt}]
             )
             st.markdown(response.choices[0].message.content)
-```
